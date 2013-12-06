@@ -202,7 +202,7 @@ namespace bazar
 						paid = rdr.GetDecimal ("paid");
 					else
 						paid = 0;
-					accrual = rdr.GetInt32("count") * rdr.GetDecimal("price");
+                    accrual = rdr.GetDecimal("count") * rdr.GetDecimal("price");
 					sum = Convert.ToDouble (accrual - paid);
 					if(sum <= 0)
 						continue;

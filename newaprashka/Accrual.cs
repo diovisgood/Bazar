@@ -48,7 +48,7 @@ namespace bazar
 			                                      typeof (string),	//3 - cash name
 			                                      typeof (int),		//4 - units id
 			                                      typeof (string),	//5 - units name
-			                                      typeof (int),		//6 - quantity
+			                                      typeof (double),	//6 - quantity
 			                                      typeof (double),	//7 - price
 			                                      typeof (double),	//8 - summa
 			                                      typeof (long),	//9 - row id
@@ -225,8 +225,8 @@ namespace bazar
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
 			double Price = (double)ServiceListStore.GetValue (iter, 7);
-			int count;
-			if (int.TryParse (args.NewText, out count)) {
+			double count;
+			if (double.TryParse (args.NewText, out count)) {
 				ServiceListStore.SetValue (iter, 6, count);
 				ServiceListStore.SetValue (iter, 8, Price * count);
 				CalculateServiceSum ();
@@ -238,7 +238,7 @@ namespace bazar
 			TreeIter iter;
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
-			int count = (int)ServiceListStore.GetValue (iter, 6);
+			double count = (double)ServiceListStore.GetValue (iter, 6);
 			double Price;
 			if (double.TryParse (args.NewText, out Price)) {
 				ServiceListStore.SetValue (iter, 7, Price);
@@ -256,14 +256,14 @@ namespace bazar
 		private void RenderCountColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
 			string Unit;
-			int Count = (int) model.GetValue (iter, 6);
+			double Count = (double) model.GetValue (iter, 6);
 
 			if(model.GetValue(iter,5) != null)
 				Unit = (string) model.GetValue(iter,5);
 			else
 				Unit = "";
 
-			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", Count, Unit);
+			(cell as Gtk.CellRendererSpin).Text = String.Format("{0:N} {1}", Count, Unit);
 		}
 		
 		private void RenderSumColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
@@ -351,8 +351,8 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@place_no", Place_no);
 				rdr = cmd.ExecuteReader();
 				
-				int cash_id, units_id, count;
-				double price, sum;
+				int cash_id, units_id;
+				double count, price, sum;
 				decimal paid;
 				
 				while (rdr.Read())
@@ -369,7 +369,7 @@ namespace bazar
 						paid = rdr.GetDecimal ("paid");
 					else
 						paid = 0;
-					count = int.Parse(rdr["count"].ToString());
+					count = double.Parse(rdr["count"].ToString());
 					price = double.Parse(rdr["price"].ToString());
 					sum = count * price;
 					
@@ -687,15 +687,15 @@ namespace bazar
 			AccrualTotal = 0m;
 			NotComplete = false;
 
-			if(ServiceListStore.GetIterFirst(out iter))
+			if (ServiceListStore.GetIterFirst(out iter))
 			{
 				AccrualTotal = Convert.ToDecimal(ServiceListStore.GetValue(iter,8));
-				if(Convert.ToDecimal(ServiceListStore.GetValue(iter,8)) == 0)
+				if (Convert.ToDecimal(ServiceListStore.GetValue(iter,8)) == 0)
 					NotComplete = true;
 				while (ServiceListStore.IterNext(ref iter)) 
 				{
 					AccrualTotal += Convert.ToDecimal(ServiceListStore.GetValue(iter,8));
-					if(Convert.ToDecimal(ServiceListStore.GetValue(iter,8)) == 0)
+					if (Convert.ToDecimal(ServiceListStore.GetValue(iter,8)) == 0)
 						NotComplete = true;
 				}
 			}

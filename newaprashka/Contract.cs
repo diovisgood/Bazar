@@ -46,7 +46,7 @@ namespace bazar
 			                                      typeof(string),	// 3 - Касса
 			                                      typeof(int), 	// 4 - idЕдиница
 			                                      typeof(string), 	// 5 - Ед. изм.
-			                                      typeof(int), 	// 6 - Количество
+			                                      typeof(double), 	// 6 - Количество
 			                                      typeof(double),	// 7 - Цена
 			                                      typeof(double),	// 8 - Сумма
 			                                      typeof(int), 	// 9 - 
@@ -177,8 +177,8 @@ namespace bazar
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
 			double Price = (double)ServiceListStore.GetValue (iter, 7);
-			int count;
-			if(int.TryParse(args.NewText, out count))
+			double count;
+			if(double.TryParse(args.NewText, out count))
 			{
 				ServiceListStore.SetValue (iter, 6, count);
 				ServiceListStore.SetValue (iter, 8, Price * count);
@@ -192,7 +192,7 @@ namespace bazar
 			if (!ServiceListStore.GetIterFromString (out iter, args.Path))
 				return;
 			double Price;
-			int count = (int)ServiceListStore.GetValue (iter, 6);
+			double count = (double)ServiceListStore.GetValue (iter, 6);
 			if (double.TryParse (args.NewText, out Price)) 
 			{
 				ServiceListStore.SetValue (iter, 7, Price);
@@ -216,14 +216,14 @@ namespace bazar
 		private void RenderCountColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
 		{
 			string Unit;
-			int Count = (int) model.GetValue (iter, 6);
+			double Count = (double) model.GetValue (iter, 6);
 
 			if(model.GetValue(iter,5) != null)
 				Unit = (string) model.GetValue(iter,5);
 			else
 				Unit = "";
 
-			(cell as Gtk.CellRendererSpin).Text = String.Format("{0} {1}", Count, Unit);
+            (cell as Gtk.CellRendererSpin).Text = String.Format("{0:N} {1}", Count, Unit);
 		}
 
 		private void RenderPriceColumn (Gtk.TreeViewColumn column, Gtk.CellRenderer cell, Gtk.TreeModel model, Gtk.TreeIter iter)
@@ -327,8 +327,8 @@ namespace bazar
 				cmd.Parameters.AddWithValue("@contract_id", ContractId);
 				rdr = cmd.ExecuteReader();
 
-				int cash_id, units_id, count;
-				double price, sum;
+				int cash_id, units_id;
+				double count, price, sum;
 
 				while (rdr.Read())
 				{
@@ -340,7 +340,7 @@ namespace bazar
 						units_id = int.Parse(rdr["units_id"].ToString());
 					else
 						units_id = -1;
-					count = int.Parse(rdr["count"].ToString());
+					count = double.Parse(rdr["count"].ToString());
 					price = double.Parse(rdr["price"].ToString());
 					sum = count * price;
 
