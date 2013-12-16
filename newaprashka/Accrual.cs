@@ -83,7 +83,8 @@ namespace bazar
 			CountColumn.Title = "Количество";
 			Gtk.CellRendererSpin CellCount = new CellRendererSpin();
 			CellCount.Editable = true;
-			Adjustment adjCount = new Adjustment(0,0,1000000,1,10,0);
+            CellCount.Digits = 2;
+            Adjustment adjCount = new Adjustment(0, 0, 1000000, 1, 10, 0);
 			CellCount.Adjustment = adjCount;
 			CellCount.Edited += OnCountSpinEdited;
 			CountColumn.PackStart (CellCount, true);
@@ -93,7 +94,7 @@ namespace bazar
 			PriceColumn.MinWidth = 90;
 			Gtk.CellRendererSpin CellPrice = new CellRendererSpin();
 			CellPrice.Editable = true;
-			CellPrice.Digits = 2;
+			CellPrice.Digits = 4;
 			Adjustment adjPrice = new Adjustment(0,0,100000000,10,1000,0);
 			CellPrice.Adjustment = adjPrice;
 			CellPrice.Edited += OnPriceSpinEdited;

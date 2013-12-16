@@ -77,20 +77,21 @@ namespace bazar
 
 			Gtk.CellRendererSpin CellCount = new CellRendererSpin();
 			CellCount.Editable = true;
-			Adjustment adjCount = new Adjustment(0,0,1000000,1,10,0);
+            CellCount.Digits = 2;
+            Adjustment adjCount = new Adjustment(0, 0, 1000000, 1, 10, 0);
         	CellCount.Adjustment = adjCount; 
 			CellCount.Edited += OnCountSpinEdited;
 
 			Gtk.CellRendererSpin CellPrice = new CellRendererSpin();
 			CellPrice.Editable = true;
-			CellPrice.Digits = 2;
+			CellPrice.Digits = 4;
 			Adjustment adjPrice = new Adjustment(0,0,100000000,10,1000,0);
         	CellPrice.Adjustment = adjPrice;
 			CellPrice.Edited += OnPriceSpinEdited;
 
 			Gtk.CellRendererSpin CellMinSum = new CellRendererSpin();
 			CellMinSum.Editable = true;
-			CellMinSum.Digits = 2;
+			CellMinSum.Digits = 4;
 			Adjustment adjMinSum = new Adjustment(0,0,100000000,10,1000,0);
 			CellMinSum.Adjustment = adjMinSum;
 			CellMinSum.Edited += OnMinSumSpinEdited;
